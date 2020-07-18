@@ -11,7 +11,7 @@ RD-Analyzer
 
 process rdAnalyzer {
     container 'abhi18av/rdanalyzer'
-    publishDir 'results/rdanalyzer'
+    publishDir 'results/rdAnalyzer'
 
     input:
     set genomeFileName, file(genomeReads) from ch_in_rdanalyzer
