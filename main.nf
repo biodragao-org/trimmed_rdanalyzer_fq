@@ -10,8 +10,6 @@ params
 params.saveBy = 'copy'
 
 
-
-
 Channel.fromFilePairs("./*_{R1,R2}.p.fastq")
         .into { ch_in_rdanalyzer }
 
@@ -35,9 +33,17 @@ process rdAnalyzer {
 
 
     script:
-    genomeName= genomeFileName.toString().split("\\_")[0]
+    genomeName = genomeFileName.toString().split("\\_")[0]
 
     """
     python  /RD-Analyzer/RD-Analyzer.py  -o ./${genomeName} ${genomeReads[0]} ${genomeReads[1]}
     """
 }
+
+
+
+/*
+#==============================================
+# extra
+#==============================================
+*/
