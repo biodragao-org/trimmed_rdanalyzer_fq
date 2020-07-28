@@ -1,31 +1,36 @@
 #!/usr/bin/env nextflow
 
 /*
-################
-params
-################
+#==============================================
+code documentation
+#==============================================
 */
-
-
-params.saveBy = 'copy'
-
-
-
-
-Channel.fromFilePairs("./*_{R1,R2}.p.fastq")
-        .into { ch_in_rdanalyzer }
 
 
 /*
-###############
-RD-Analyzer
-###############
+#==============================================
+params
+#==============================================
 */
 
+params.saveMode = 'copy'
+params.resultsDir = 'results/rdAnalyzer'
+params.filePattern = "./*_{R1,R2}.fastq.gz"
+
+Channel.fromFilePairs(params.filePattern)
+        .into { ch_in_rdanalyzer }
+
+
+
+/*
+#==============================================
+RD-analyzer
+#==============================================
+*/
 
 process rdAnalyzer {
     container 'abhi18av/rdanalyzer'
-    publishDir 'results/rdAnalyzer', mode: params.saveBy
+    publishDir params.resultsDir, mode: params.saveMode
 
     input:
     set genomeFileName, file(genomeReads) from ch_in_rdanalyzer
@@ -35,9 +40,17 @@ process rdAnalyzer {
 
 
     script:
-    genomeName= genomeFileName.toString().split("\\_")[0]
+    genomeName = genomeFileName.toString().split("\\_")[0]
 
     """
     python  /RD-Analyzer/RD-Analyzer.py  -o ./${genomeName} ${genomeReads[0]} ${genomeReads[1]}
     """
 }
+
+
+
+/*
+#==============================================
+# extra
+#==============================================
+*/
